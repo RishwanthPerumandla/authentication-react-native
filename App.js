@@ -13,7 +13,11 @@ import Amplify, { Analytics } from 'aws-amplify';
 import * as WebBrowser from 'expo-web-browser';
 import config from './aws-exports';
 import CustomSignIn from './screens/CustomSignIn';
+import CustomSignUp from './screens/CustomSignUp';
+import CustomConfirmSignUp from './screens/CustomConfirmSignUp';
 import CustomVerifyContact from './screens/CustomVerfiyContact';
+import CustomForgotPassword from './screens/CustomForgotPassword';
+
 import {
   AuthPiece,
   Greetings,
@@ -27,6 +31,7 @@ import {
   withAuthenticator,
 } from 'aws-amplify-react-native';
 import { Authenticator } from 'aws-amplify-react-native/dist/Auth';
+import HomeScreen from './screens/CustomHomeScreen';
 
 async function urlOpener(url, redirectUrl) {
   const { type, url: newUrl } = await WebBrowser.openAuthSessionAsync(
@@ -67,7 +72,8 @@ function App(props) {
   if (props.authState === 'signedIn') {
     return (
       <View style={styles.container}>
-        <Text>Open up App.js to start working on your app!</Text>
+        <HomeScreen />
+        {/* <Text>Open up App.js to start working on your app!</Text> */}
       </View>
     );
   } else {
@@ -101,12 +107,13 @@ export default function AuthApp() {
   return (
     <Authenticator hideDefault={true} errorMessage={map}>
       <CustomSignIn />
-      <SignUp />
+      <CustomSignUp />
+      <CustomConfirmSignUp />
       <CustomVerifyContact />
       <App />
       <Greetings />
       <RequireNewPassword />
-      <ForgotPassword />
+      <CustomForgotPassword />
       <ConfirmSignIn />
       <ConfirmSignUp />
     </Authenticator>
