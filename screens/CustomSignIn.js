@@ -2,17 +2,20 @@ import React from 'react';
 import {
   Text,
   StyleSheet,
-  TextInput,
   Image,
   View,
   TouchableOpacity,
+  TouchableHighlight,
   KeyboardAvoidingView,
+  ScrollView,
 } from 'react-native';
-
+import Constants from 'expo-constants';
+import { StatusBar } from 'expo-status-bar';
+import { TextInput, HelperText, Button } from 'react-native-paper';
 import Amplify, { Auth, I18n, Logger } from 'aws-amplify';
-import { Wrapper, SignIn } from 'aws-amplify-react-native';
+import { withOAuth, Wrapper, SignIn } from 'aws-amplify-react-native';
 
-export default class CustomSignIn extends SignIn {
+class CustomSignIn extends SignIn {
   constructor(props) {
     super(props);
     this._validAuthStates = ['signIn', 'signedOut', 'signedUp'];
@@ -25,7 +28,9 @@ export default class CustomSignIn extends SignIn {
     this.passwordRef = React.createRef();
   }
 
-  _isUsernameValid(name){return(/^[a-zA-Z0-9._]*$/.test(name))};
+  _isUsernameValid(name) {
+    return /^[a-zA-Z0-9._]*$/.test(name);
+  }
 
   handleSignIn() {
     this.signIn();
@@ -39,88 +44,92 @@ export default class CustomSignIn extends SignIn {
   showComponent(theme) {
     return (
       <Wrapper>
-      <TextInputAvoidingView>
-        <StatusBar style="auto" />
-        <ScrollView
+        <TextInputAvoidingView>
+          <StatusBar style="auto" />
+          <ScrollView
             style={styles.container}
             keyboardShouldPersistTaps={'always'}
             removeClippedSubviews={false}
-        >
-        <View style={{
-            flex: 1,
-            flexDirection: 'row',
-            justifyContent: 'center',
-          }}>
-            <Image
-              style={styles.avatar}
-              source={require('../assets/exhibits.png')}
-            />
-            <Text style={{ color: 'red' }}>{this.state.error}</Text>
-        </View>
-        <View style={{
-              flex: 1,
-              flexDirection: 'row',
-              justifyContent: 'center',
-            }}>
-            <Text style={styles.registerHead}>Login</Text>
-        </View>
-        <View style={styles.inputContainerStyle}>
-            <TextInput
+          >
+            <View
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                justifyContent: 'center',
+              }}
+            >
+              <Image
+                style={styles.avatar}
+                source={require('../assets/exibits_logo.png')}
+              />
+            </View>
+            <View
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                justifyContent: 'center',
+              }}
+            >
+              <Text style={styles.registerHead}>Login</Text>
+            </View>
+
+            <View style={styles.inputContainerStyle}>
+              <View style={styles.helpersWrapper}>
+                <HelperText type="error" visible={true} style={styles.helper}>
+                  {this.state.error}
+                </HelperText>
+                {/* <HelperText type="info" visible style={styles.counterHelper}>
+                  {0} /20
+                </HelperText> */}
+              </View>
+              <TextInput
                 mode="outlined"
                 style={styles.inputContainerStyle}
-                error={!this._isUsernameValid(userName)}
+                error={!this._isUsernameValid(this.state.userName)}
                 label="User Name"
                 placeholder={I18n.get('USERNAME')}
                 value={this.state.username}
-                maxLength={MAX_LENGTH}
+                maxLength={20}
                 autoCapitalize="none"
                 ref={this.usernameRef}
                 onChangeText={(text) => this.setState({ username: text })}
-            />
-            <View style={styles.helpersWrapper}>
-                <HelperText
-                  type="error"
-                  visible={!this._isUsernameValid(userName)}
-                  style={styles.helper}
-                >Error: special characters are not allowed
-                </HelperText>
-                <HelperText type="info" visible style={styles.counterHelper}>
-                  {userName.length} / {MAX_LENGTH}
+              />
+            </View>
+            <View style={styles.inputContainerStyle}>
+              <TextInput
+                mode="outlined"
+                error={!true}
+                style={styles.inputContainerStyle}
+                label="Password"
+                value={this.state.password}
+                autoCapitalize="none"
+                ref={this.passwordRef}
+                onChangeText={(text) => this.setState({ password: text })}
+                placeholder={I18n.get('PASSWORD')}
+                secureTextEntry
+              />
+              <View style={styles.helpersWrapper}>
+                <HelperText type="error" visible={false} style={styles.helper}>
+                  Invalid Credentials
                 </HelperText>
               </View>
             </View>
-            <View style={styles.inputContainerStyle}>
-                <TextInput
-                  mode="outlined"
-                  error = {!true}
-                  style={styles.inputContainerStyle}
-                  label="Password"
-                  value={this.state.password}
-                  autoCapitalize="none"
-                  ref={this.passwordRef}
-                  onChangeText={(text) => this.setState({ password: text })}
-                  placeholder={I18n.get('PASSWORD')}
-                  secureTextEntry
-                  />
-                <View style={styles.helpersWrapper}>
-                  <HelperText
-                    type="error"
-                    visible={false}
-                    style={styles.helper}
-                  >Invalid Credentials
-                  </HelperText>
-                </View>
-            </View>
 
             <Button
-                mode="outlined"
-                onPress = {() => {}}
-                style={styles.button}
-                color ={"#FFFFFF"}
-                >
-                LOGIN
+              mode="outlined"
+              style={
+                !!(!this.state.username || !this.state.password)
+                  ? styles.buttonDisabled
+                  : styles.button
+              }
+              disabled={!!(!this.state.username || !this.state.password)}
+              onPress={this.handleSignIn}
+              // style={styles.button}
+              color={'#FFFFFF'}
+            >
+              LOGIN
             </Button>
-        {/* <View style={theme.section}>
+            {/* <View style={theme.section}>
           <View style={theme.sectionBody}>
              <TextInput
               style={styles.input}
@@ -151,126 +160,100 @@ export default class CustomSignIn extends SignIn {
            </View>
         </View> */}
 
-        <TouchableHighlight
-            mode="outlined"
-            onPress={() => {}}
-            underlayColor='none'
-            style={styles.forgotPassword}
-            color ={"#FFFFFF"}
+            <TouchableHighlight
+              mode="outlined"
+              onPress={() => this.changeState('forgotPassword')}
+              underlayColor="none"
+              style={styles.forgotPassword}
+              color={'#FFFFFF'}
             >
-          <Text style={styles.alreadyLogin}>FORGOT PASSWORD?</Text>
-        </TouchableHighlight>
+              <Text style={styles.alreadyLogin}>FORGOT PASSWORD?</Text>
+            </TouchableHighlight>
 
-        <View style = {{flexDirection : "row"}}>
-            <View
-              style={{
-                flex:11,
-                borderBottomColor: 'black',
-                borderBottomWidth: 1,
-                marginVertical : 8,
-                marginHorizontal : 8,
-              }}
-            />
-            <Text style={{flex:1}}>or</Text>
-            <View
-              style={{
-                flex :11,
-                borderBottomColor: 'black',
-                borderBottomWidth: 1,
-                marginVertical : 8,
-                marginHorizontal : 8,
-              }}
-            />
-        </View>
-        <Button
-            mode="outlined"
-            onPress = {() => {}}
-            style={styles.buttonF}
-            color ={"#FFFFFF"}
-            icon={({ size }) => (
-              <Image
+            <View style={{ flexDirection: 'row' }}>
+              <View
+                style={{
+                  flex: 1,
+                  borderBottomColor: 'black',
+                  borderBottomWidth: 1,
+                  marginVertical: 4,
+                  marginHorizontal: '30%',
+                }}
+              />
+            </View>
+            <Button
+              mode="outlined"
+              onPress={() => Auth.federatedSignIn({ provider: 'Facebook' })}
+              style={styles.buttonF}
+              color={'#FFFFFF'}
+              icon={({ size }) => (
+                <Image
                   source={require('../assets/facebook.png')}
-                  style={{ width: size*1.5, height: size*1.5}}
-              />
-            )}
+                  style={{ width: size * 1.5, height: size * 1.5 }}
+                />
+              )}
             >
-            Sign In with facebook
-        </Button>
+              Sign In with facebook
+            </Button>
 
-        <View style = {{flexDirection : "row"}}>
-            <View
-              style={{
-                flex:11,
-                borderBottomColor: 'black',
-                borderBottomWidth: 1,
-                marginVertical : 8,
-                marginHorizontal : 8,
-              }}
-            />
-            <Text style={{flex:1}}>or</Text>
-            <View
-              style={{
-                flex :11,
-                borderBottomColor: 'black',
-                borderBottomWidth: 1,
-                marginVertical : 8,
-                marginHorizontal : 8,
-              }}
-            />
-        </View>
+            <View style={{ flexDirection: 'row' }}>
+              <View
+                style={{
+                  flex: 1,
+                  borderBottomColor: 'black',
+                  borderBottomWidth: 1,
+                  marginVertical: 4,
+                  marginHorizontal: '30%',
+                }}
+              />
+            </View>
 
-        <Button
-            mode="outlined"
-            onPress={() => {}}
-            style={styles.buttonG}
-            color ={"#FFFFFF"}
-            icon={({ size }) => (
-              <Image
+            <Button
+              mode="outlined"
+              onPress={() => Auth.federatedSignIn({ provider: 'Google' })}
+              style={styles.buttonG}
+              color={'#FFFFFF'}
+              icon={({ size }) => (
+                <Image
                   source={require('../assets/google.png')}
-                  style={{ width: size*1.5, height: size*1.5}}
+                  style={{ width: size * 1.5, height: size * 1.5 }}
+                />
+              )}
+            >
+              Sign In With Google
+            </Button>
+
+            <View style={{ flexDirection: 'row' }}>
+              <View
+                style={{
+                  flex: 1,
+                  borderBottomColor: 'black',
+                  borderBottomWidth: 1,
+                  marginVertical: 4,
+                  marginHorizontal: '30%',
+                }}
               />
-            )}
-            >
-            Sign In With Google
-        </Button>
+            </View>
 
-        <View style = {{flexDirection : "row"}}>
-            <View
-              style={{
-                flex:11,
-                borderBottomColor: 'black',
-                borderBottomWidth: 1,
-                marginVertical : 8,
-                marginHorizontal : 8,
-              }}
-            />
-            <Text style={{flex:1}}>or</Text>
-            <View
-              style={{
-                flex :11,
-                borderBottomColor: 'black',
-                borderBottomWidth: 1,
-                marginVertical : 8,
-                marginHorizontal : 8,
-              }}
-            />
-        </View>
-
-        <TouchableHighlight
-            mode="outlined"
-            onPress={() => {}}
-            underlayColor='none'
-            style={styles.alreadyAccount}
-            color ={"#FFFFFF"}
+            <TouchableHighlight
+              mode="outlined"
+              onPress={() => this.changeState('signUp')}
+              underlayColor="none"
+              style={styles.alreadyAccount}
+              color={'#FFFFFF'}
             >
-          <Text style={styles.alreadyLogin}>Don't have an Account? REGISTER</Text>
-        </TouchableHighlight>
-    </ScrollView>
-  </TextInputAvoidingView>
-  </Wrapper>
+              <Text style={styles.alreadyLogin}>
+                Don't have an Account? REGISTER
+              </Text>
+            </TouchableHighlight>
+          </ScrollView>
+        </TextInputAvoidingView>
+      </Wrapper>
     );
   }
 }
+
+export default withOAuth(CustomSignIn);
 
 const styles = StyleSheet.create({
   container: {
@@ -306,6 +289,12 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     color: '#FFFFFF',
     backgroundColor: '#000000',
+  },
+  buttonDisabled: {
+    marginHorizontal: 12,
+    marginBottom: 12,
+    color: '#fff',
+    backgroundColor: '#ff990080',
   },
   avatar: {
     marginTop: 8,
@@ -345,7 +334,7 @@ const styles = StyleSheet.create({
   },
 });
 
-function TextInputAvoidingView({ children }){
+function TextInputAvoidingView({ children }) {
   return Platform.OS === 'ios' ? (
     <KeyboardAvoidingView
       style={styles.wrapper}
@@ -357,4 +346,4 @@ function TextInputAvoidingView({ children }){
   ) : (
     <>{children}</>
   );
-};
+}

@@ -1,11 +1,21 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Image, Text, View, ImageBackground } from 'react-native';
+import {
+  StyleSheet,
+  Linking,
+  Image,
+  Text,
+  View,
+  ImageBackground,
+} from 'react-native';
 import { globalStyles, MyTheme } from './styles/global';
 import Amplify, { Analytics } from 'aws-amplify';
+import * as WebBrowser from 'expo-web-browser';
 import config from './aws-exports';
 import CustomSignIn from './screens/CustomSignIn';
+import CustomVerifyContact from './screens/CustomVerfiyContact';
 import {
+  AuthPiece,
   Greetings,
   ConfirmSignIn,
   ConfirmSignUp,
@@ -18,7 +28,26 @@ import {
 } from 'aws-amplify-react-native';
 import { Authenticator } from 'aws-amplify-react-native/dist/Auth';
 
-Amplify.configure({ ...config, Analytics: { disabled: true } });
+async function urlOpener(url, redirectUrl) {
+  const { type, url: newUrl } = await WebBrowser.openAuthSessionAsync(
+    url,
+    redirectUrl,
+  );
+
+  if (type === 'success' && Platform.OS === 'ios') {
+    WebBrowser.dismissBrowser();
+    return Linking.openURL(newUrl);
+  }
+}
+
+const oauth = {
+  ...config.oauth,
+  urlOpener: urlOpener,
+  redirectSignIn: 'exp://192.168.0.112:19000',
+  redirectSignOut: 'exp://192.168.0.112:19000',
+};
+
+Amplify.configure({ ...config, Analytics: { disabled: true }, oauth: oauth });
 
 // class MyGreetings extends Greetings {
 //   render() {
@@ -46,6 +75,21 @@ function App(props) {
   }
 }
 
+// class App extends AuthPiece {
+//   constructor(props) {
+//     super(props);
+//     this._validAuthStates = ['signedIn'];
+//   }
+//   showComponent(theme) {
+//     console.log('Current State is .... ' + props.authState);
+//     return (
+//       <View style={styles.container}>
+//         <Text>Open up App.js to start working on your app!</Text>
+//       </View>
+//     );
+//   }
+// }
+
 export default function AuthApp() {
   const map = (message) => {
     if (/user.*not.*exist/i.test(message)) {
@@ -56,9 +100,15 @@ export default function AuthApp() {
   };
   return (
     <Authenticator hideDefault={true} errorMessage={map}>
-      <App />
       <CustomSignIn />
+      <SignUp />
+      <CustomVerifyContact />
+      <App />
       <Greetings />
+      <RequireNewPassword />
+      <ForgotPassword />
+      <ConfirmSignIn />
+      <ConfirmSignUp />
     </Authenticator>
   );
 }
