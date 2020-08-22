@@ -27,8 +27,8 @@ export default class CustomConfirmSignUp extends ConfirmSignUp {
     this._validAuthStates = ['confirmSignUp'];
     this.handleConfirmSignUp = this.handleConfirmSignUp.bind(this);
 
-    this.usernameRef = React.createRef;
-    this.codeRef = React.createRef;
+    this.usernameRef = React.createRef();
+    this.codeRef = React.createRef();
   }
 
   handleConfirmSignUp() {
@@ -53,6 +53,7 @@ export default class CustomConfirmSignUp extends ConfirmSignUp {
                 source={require('../assets/exibits_logo.png')}
               />
               <Text style={styles.registerHead}>Confirm Code</Text>
+              <Text>{this.state.error}</Text>
             </View>
             <View>
               <TextInput
@@ -73,7 +74,6 @@ export default class CustomConfirmSignUp extends ConfirmSignUp {
                 onChangeText={(text) => this.setState({ code: text })}
                 placeholder={I18n.get('CODE')}
               />
-
               <Button
                 mode="outlined"
                 style={

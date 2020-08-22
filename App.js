@@ -1,15 +1,19 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import React, { useState } from 'react';
 import {
   StyleSheet,
   Linking,
   Image,
   Text,
   View,
+  Button,
   ImageBackground,
+  Dimensions,
 } from 'react-native';
 import { globalStyles, MyTheme } from './styles/global';
-import Amplify, { Analytics } from 'aws-amplify';
+import * as Permissions from 'expo-permissions';
+import * as ImagePicker from 'expo-image-picker';
+import Amplify, { Analytics, Auth, Storage } from 'aws-amplify';
 import * as WebBrowser from 'expo-web-browser';
 import config from './aws-exports';
 import CustomSignIn from './screens/CustomSignIn';
@@ -57,6 +61,54 @@ Amplify.configure({ ...config, Analytics: { disabled: true }, oauth: oauth });
 
 function App(props) {
   console.log('Current State is .... ' + props.authState);
+  const [CurrentUserName, setUserName] = useState('');
+  const [CurrentEmail, setEmail] = useState('');
+  // const [CurrentEmailVerified, setEmailVerified] = useState('');
+  Auth.currentAuthenticatedUser()
+    .then((user) => {
+      return user;
+    })
+    .then((data) => {
+      setUserName(data.username);
+      setEmail(data.attributes.email);
+      // setEmailVerified(data.attributes.email_verified);
+    })
+    .catch((err) => console.log(err));
+  const [image, setImage] = useState(null);
+
+  // permission to access the user's phone library
+  askPermissionsAsync = async () => {
+    await Permissions.askAsync(Permissions.CAMERA_ROLL);
+  };
+
+  useLibraryHandler = async () => {
+    await askPermissionsAsync();
+    let result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: false,
+      aspect: [4, 3],
+    });
+
+    console.log(result);
+
+    if (!result.cancelled) {
+      setImage(result.uri);
+      uploadImage(image);
+    }
+  };
+
+  uploadImage = async (uri) => {
+    const response = await fetch(uri);
+    const blob = await response.blob();
+    const fileName = 'profilepic.jpeg';
+    await Storage.put(fileName, blob, {
+      contentType: 'image/jpeg',
+      level: 'public',
+    })
+      .then((data) => console.log(data))
+      .catch((err) => console.log(err));
+  };
+
+  let { height, width } = Dimensions.get('window');
   if (props.authState === 'signedIn') {
     return (
       <View style={styles.container}>
@@ -65,9 +117,44 @@ function App(props) {
             style={styles.avatar}
             source={require('./assets/exibits_logo.png')}
           />
+          <NamesView title="Username : " titletag={CurrentUserName} />
+          {/* <NamesView title="Fullname : " titletag={FullName} /> */}
+          {/* <NamesView title="EmailVerified : " titletag={CurrentEmailVerified} /> */}
+          {/* <NamesView title="Gender : " titletag={Gender} /> */}
+          <NamesView title="E-Mail : " titletag={CurrentEmail} />
+          {/* <NamesView title="Phone Number : " titletag={phoneNo} /> */}
+          {/* <NamesView title="Age : " titletag={Age} /> */}
+          {image && (
+            <Image
+              source={{ uri: image }}
+              style={{ width: width, height: height / 2 }}
+            />
+          )}
+          {/* <Button onPress={useLibraryHandler} 
+           /> */}
+          <Button
+            mode="outlined"
+            onPress={useLibraryHandler}
+            color={'#FFFFFF'}
+            title=" UPLOAD NEW PROFILE PICTURE"
+          />
         </View>
-        {/* <HomeScreen /> */}
-        <Text>Open up App.js to start working on your app!</Text>
+        {/* 
+          <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+            {ProfilePicture === null
+              ? ProfilePicture || (
+                  <Image
+                    style={styles.profilePic}
+                    source={require('./assets/avatar.png')}
+                  />
+                )
+              : ProfilePicture && (
+                  <Image
+                    style={styles.profilePic}
+                    source={{ uri: ProfilePicture }}
+                  />
+                )}
+          </View> */}
       </View>
     );
   } else {
@@ -89,7 +176,16 @@ function App(props) {
 //     );
 //   }
 // }
-
+const NamesView = ({ title, titletag }) => (
+  <View style={styles.row}>
+    <View style={styles.inputWrap1}>
+      <Text style={styles.textStyle1}>{title}</Text>
+    </View>
+    <View style={styles.inputWrap}>
+      <Text style={styles.textStyle}>{titletag}</Text>
+    </View>
+  </View>
+);
 export default function AuthApp() {
   const map = (message) => {
     if (/user.*not.*exist/i.test(message)) {

@@ -1,0 +1,6 @@
+type Profi @model {
+  id: ID!
+  name: String!
+  email: String!
+  image: String
+}
