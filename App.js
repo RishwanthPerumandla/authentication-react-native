@@ -102,7 +102,7 @@ function App(props) {
     const fileName = 'profilepic.jpeg';
     await Storage.put(fileName, blob, {
       contentType: 'image/jpeg',
-      level: 'public',
+      level: 'private',
     })
       .then((data) => console.log(data))
       .catch((err) => console.log(err));
