@@ -1,20 +1,20 @@
 {
     "dev": {
         "awscloudformation": {
-            "AuthRoleName": "amplify-exibitsauth-dev-223506-authRole",
-            "UnauthRoleArn": "arn:aws:iam::146499840602:role/amplify-exibitsauth-dev-223506-unauthRole",
-            "AuthRoleArn": "arn:aws:iam::146499840602:role/amplify-exibitsauth-dev-223506-authRole",
+            "AuthRoleName": "amplify-exibits-dev-143933-authRole",
+            "UnauthRoleArn": "arn:aws:iam::146499840602:role/amplify-exibits-dev-143933-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::146499840602:role/amplify-exibits-dev-143933-authRole",
             "Region": "us-east-1",
-            "DeploymentBucketName": "amplify-exibitsauth-dev-223506-deployment",
-            "UnauthRoleName": "amplify-exibitsauth-dev-223506-unauthRole",
-            "StackName": "amplify-exibitsauth-dev-223506",
-            "StackId": "arn:aws:cloudformation:us-east-1:146499840602:stack/amplify-exibitsauth-dev-223506/4df0bbc0-e307-11ea-8fcc-1251ea34542f",
-            "AmplifyAppId": "d21atq7kg0bpaj"
+            "DeploymentBucketName": "amplify-exibits-dev-143933-deployment",
+            "UnauthRoleName": "amplify-exibits-dev-143933-unauthRole",
+            "StackName": "amplify-exibits-dev-143933",
+            "StackId": "arn:aws:cloudformation:us-east-1:146499840602:stack/amplify-exibits-dev-143933/34139e10-e457-11ea-81e3-0acaf3694d17",
+            "AmplifyAppId": "d1i0tbdpuxqb3b"
         },
         "categories": {
             "auth": {
-                "exibitsauth8e36f5ec": {
-                    "hostedUIProviderCreds": "[{\"ProviderName\":\"Facebook\",\"client_id\":\"885422768646747\",\"client_secret\":\"19933899715a1ac662aac2a246f3cd3d\"},{\"ProviderName\":\"Google\",\"client_id\":\"796412597995-1025u3d5s6h3fp3an6gnt3o1i848bdfg.apps.googleusercontent.com\",\"client_secret\":\"ipmBGoacXyMcL2M0pkNBwmio\"}]"
+                "exibits3ef35244": {
+                    "hostedUIProviderCreds": "[{\"ProviderName\":\"Facebook\",\"client_id\":\"304513624211820\",\"client_secret\":\"b024e429587c66172d1d03a6b4a03db0\"},{\"ProviderName\":\"Google\",\"client_id\":\"796412597995-1025u3d5s6h3fp3an6gnt3o1i848bdfg.apps.googleusercontent.com\",\"client_secret\":\"ipmBGoacXyMcL2M0pkNBwmio\"}]"
                 }
             }
         }

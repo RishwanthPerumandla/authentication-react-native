@@ -1,8 +1,8 @@
 {
-    "identityPoolName": "exibitsauth8e36f5ec_identitypool_8e36f5ec",
+    "identityPoolName": "exibits3ef35244_identitypool_3ef35244",
     "allowUnauthenticatedIdentities": false,
-    "resourceNameTruncated": "exibit8e36f5ec",
-    "userPoolName": "exibitsauth8e36f5ec_userpool_8e36f5ec",
+    "resourceNameTruncated": "exibit3ef35244",
+    "userPoolName": "exibits3ef35244_userpool_3ef35244",
     "autoVerifiedAttributes": [
         "email"
     ],
@@ -28,10 +28,10 @@
     "userpoolClientReadAttributes": [
         "email"
     ],
-    "userpoolClientLambdaRole": "exibit8e36f5ec_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "exibit3ef35244_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "sharedId": "8e36f5ec",
-    "resourceName": "exibitsauth8e36f5ec",
+    "sharedId": "3ef35244",
+    "resourceName": "exibits3ef35244",
     "authSelections": "identityPoolAndUserPool",
     "authRoleArn": {
         "Fn::GetAtt": [
@@ -46,14 +46,14 @@
         ]
     },
     "useDefault": "defaultSocial",
+    "userPoolGroupList": [],
+    "dependsOn": [],
     "hostedUI": true,
-    "hostedUIDomainName": "exibitsauth8e36f5ec-8e36f5ec",
+    "hostedUIDomainName": "exibitsbda7abc4-bda7abc4",
     "authProvidersUserPool": [
         "Facebook",
         "Google"
     ],
     "hostedUIProviderMeta": "[{\"ProviderName\":\"Facebook\",\"authorize_scopes\":\"email,public_profile\",\"AttributeMapping\":{\"email\":\"email\",\"username\":\"id\"}},{\"ProviderName\":\"Google\",\"authorize_scopes\":\"openid email profile\",\"AttributeMapping\":{\"email\":\"email\",\"username\":\"sub\"}}]",
-    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"https://www.example.com/\"],\"LogoutURLs\":[\"https://www.example.com/\"]}",
-    "userPoolGroupList": [],
-    "dependsOn": []
+    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"exp://192.168.0.112:19000/\"],\"LogoutURLs\":[\"exp://192.168.0.112:19000/\"]}"
 }

@@ -47,33 +47,27 @@ async function urlOpener(url, redirectUrl) {
 
 const oauth = {
   ...config.oauth,
+  responseType: 'code',
   urlOpener: urlOpener,
-  redirectSignIn: 'exp://192.168.0.112:19000',
-  redirectSignOut: 'exp://192.168.0.112:19000',
+  redirectSignIn: 'exp://192.168.0.112:19000/',
+  redirectSignOut: 'exp://192.168.0.112:19000/',
 };
 
 Amplify.configure({ ...config, Analytics: { disabled: true }, oauth: oauth });
-
-// class MyGreetings extends Greetings {
-//   render() {
-//     return (
-//       <View style={globalStyles.imageContainer}>
-//         <Image
-//           source={require('./assets/exibits_logo.png')}
-//           style={globalStyles.image}
-//         />
-//       </View>
-//     );
-//   }
-// }
 
 function App(props) {
   console.log('Current State is .... ' + props.authState);
   if (props.authState === 'signedIn') {
     return (
       <View style={styles.container}>
-        <HomeScreen />
-        {/* <Text>Open up App.js to start working on your app!</Text> */}
+        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+          <Image
+            style={styles.avatar}
+            source={require('./assets/exibits_logo.png')}
+          />
+        </View>
+        {/* <HomeScreen /> */}
+        <Text>Open up App.js to start working on your app!</Text>
       </View>
     );
   } else {
@@ -109,13 +103,15 @@ export default function AuthApp() {
       <CustomSignIn />
       <CustomSignUp />
       <CustomConfirmSignUp />
-      <CustomVerifyContact />
       <App />
-      <Greetings />
+      <Greetings
+        inGreeting={(username) => 'Hello ' + username}
+        outGreeting="Please sign in..."
+      />
+      <VerifyContact />
       <RequireNewPassword />
       <CustomForgotPassword />
       <ConfirmSignIn />
-      <ConfirmSignUp />
     </Authenticator>
   );
 }
@@ -126,6 +122,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  avatar: {
+    marginTop: 8,
+    width: 100,
+    height: 100,
   },
 });
 
@@ -138,6 +139,7 @@ const styles = StyleSheet.create({
 //     <ConfirmSignUp />,
 //     <ForgotPassword />,
 //     <RequireNewPassword />,
+
 //     <SignIn />,
 //     <SignUp />,
 //     <VerifyContact />,
