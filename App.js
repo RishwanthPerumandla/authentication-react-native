@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
   Linking,
@@ -63,7 +63,8 @@ function App(props) {
   console.log('Current State is .... ' + props.authState);
   const [CurrentUserName, setUserName] = useState('');
   const [CurrentEmail, setEmail] = useState('');
-  // const [CurrentEmailVerified, setEmailVerified] = useState('');
+
+  //Current User Details
   Auth.currentAuthenticatedUser()
     .then((user) => {
       return user;
@@ -80,7 +81,16 @@ function App(props) {
   askPermissionsAsync = async () => {
     await Permissions.askAsync(Permissions.CAMERA_ROLL);
   };
-
+  useEffect(() => {
+    //Getch Image
+    Storage.get('profilepic.jpeg', { level: 'private' })
+      .then((result) => {
+        console.log(result);
+        setImage(result);
+      })
+      .catch((err) => console.log(err));
+  }, []);
+  //imagePicker
   useLibraryHandler = async () => {
     await askPermissionsAsync();
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -89,13 +99,14 @@ function App(props) {
     });
 
     console.log(result);
-
+    setImage(null);
     if (!result.cancelled) {
       setImage(result.uri);
       uploadImage(image);
     }
   };
 
+  //Uploadimage
   uploadImage = async (uri) => {
     const response = await fetch(uri);
     const blob = await response.blob();
@@ -108,7 +119,9 @@ function App(props) {
       .catch((err) => console.log(err));
   };
 
+  //Height and Width of Uploaded image
   let { height, width } = Dimensions.get('window');
+
   if (props.authState === 'signedIn') {
     return (
       <View style={styles.container}>
@@ -124,6 +137,7 @@ function App(props) {
           <NamesView title="E-Mail : " titletag={CurrentEmail} />
           {/* <NamesView title="Phone Number : " titletag={phoneNo} /> */}
           {/* <NamesView title="Age : " titletag={Age} /> */}
+          {/* Display Profile Pic */}
           {image && (
             <Image
               source={{ uri: image }}
@@ -134,27 +148,18 @@ function App(props) {
            /> */}
           <Button
             mode="outlined"
-            onPress={useLibraryHandler}
             color={'#FFFFFF'}
+            onPress={useLibraryHandler}
             title=" UPLOAD NEW PROFILE PICTURE"
           />
+
+          <Button
+            mode="outlined"
+            color={'#000'}
+            onPress={() => Auth.signOut({ global: true })}
+            title="Signout"
+          />
         </View>
-        {/* 
-          <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-            {ProfilePicture === null
-              ? ProfilePicture || (
-                  <Image
-                    style={styles.profilePic}
-                    source={require('./assets/avatar.png')}
-                  />
-                )
-              : ProfilePicture && (
-                  <Image
-                    style={styles.profilePic}
-                    source={{ uri: ProfilePicture }}
-                  />
-                )}
-          </View> */}
       </View>
     );
   } else {
@@ -176,6 +181,7 @@ function App(props) {
 //     );
 //   }
 // }
+
 const NamesView = ({ title, titletag }) => (
   <View style={styles.row}>
     <View style={styles.inputWrap1}>
@@ -186,6 +192,7 @@ const NamesView = ({ title, titletag }) => (
     </View>
   </View>
 );
+
 export default function AuthApp() {
   const map = (message) => {
     if (/user.*not.*exist/i.test(message)) {
