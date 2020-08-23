@@ -4,12 +4,12 @@ import {
   StyleSheet,
   Image,
   View,
-  TouchableOpacity,
   TouchableHighlight,
-  KeyboardAvoidingView,
   ScrollView,
+  Platform,
 } from 'react-native';
-import Constants from 'expo-constants';
+import TextInputAvoidingView from './TextInputAvoidView';
+import { styles } from '../styles/globalStyles';
 import { StatusBar } from 'expo-status-bar';
 import { TextInput, HelperText, Button } from 'react-native-paper';
 import Amplify, { I18n } from 'aws-amplify';
@@ -31,7 +31,60 @@ export default class CustomForgotPassword extends ForgotPassword {
   }
 
   forgotBody(theme) {
-    return (
+    return Platform.OS === 'web' ? (
+      <View
+        style={[styles.container, { backgroundColor: '#fff' }]}
+        keyboardShouldPersistTaps={'always'}
+        removeClippedSubviews={false}
+      >
+        <View style={styles.imageView}>
+          <Image
+            style={styles.avatar}
+            source={require('../assets/exibits_logo.png')}
+          />
+        </View>
+        <View style={styles.imageView}>
+          <Text style={styles.registerHead}>RESET PASSWORD</Text>
+        </View>
+        <View style={styles.inputContainerStyleWeb}>
+          <TextInput
+            mode="outlined"
+            style={styles.inputContainerStyle}
+            label="UserName"
+            autoCapitalize="null"
+            ref={this.usernameRef}
+            value={this.state.username}
+            onChangeText={(text) => this.setState({ username: text })}
+            placeholder={I18n.get('Enter your Username')}
+          />
+          <View style={styles.helpersWrapper}>
+            <HelperText type="error" visible={true} style={styles.helper}>
+              {I18n.get(this.state.error)}
+            </HelperText>
+          </View>
+        </View>
+        <Button
+          mode="outlined"
+          style={
+            !!!this.state.username ? styles.buttonDisabledWeb : styles.buttonWeb
+          }
+          disabled={!!!this.state.username}
+          onPress={this.send}
+          color={'#FFFFFF'}
+        >
+          {I18n.get('SEND')}
+        </Button>
+        <TouchableHighlight
+          mode="outlined"
+          onPress={() => this.changeState('signIn')}
+          underlayColor="none"
+          style={styles.alreadyAccountWeb}
+          color={'#FFFFFF'}
+        >
+          <Text style={styles.alreadyLogin}>{I18n.get('Sign In')}</Text>
+        </TouchableHighlight>
+      </View>
+    ) : (
       <TextInputAvoidingView>
         <StatusBar style="dark" />
         <ScrollView
@@ -102,7 +155,77 @@ export default class CustomForgotPassword extends ForgotPassword {
     );
   }
   submitBody(theme) {
-    return (
+    return Platform.OS === 'web' ? (
+      <View
+        style={[styles.container, { backgroundColor: background }]}
+        keyboardShouldPersistTaps={'always'}
+        removeClippedSubviews={false}
+      >
+        <View style={styles.imageView}>
+          <Image
+            style={styles.avatar}
+            source={require('../assets/exibits_logo.png')}
+          />
+        </View>
+        <View style={styles.imageView}>
+          <Text style={styles.registerHead}>RESET PASSWORD</Text>
+        </View>
+        <View style={styles.inputContainerStyleWeb}>
+          <TextInput
+            mode="outlined"
+            style={styles.inputContainerStyle}
+            label="Full Name"
+            autoCapitalize="null"
+            ref={this.codeRef}
+            value={this.state.code}
+            onChangeText={(text) => this.setState({ code: text })}
+            placeholder={I18n.get('Enter Code')}
+            autoCapitalize="none"
+          />
+        </View>
+        <View style={styles.inputContainerStyleWeb}>
+          <TextInput
+            mode="outlined"
+            style={styles.inputContainerStyle}
+            label="Password"
+            autoCapitalize="null"
+            ref={this.passwordRef}
+            value={this.state.password}
+            onChangeText={(text) => this.setState({ password: text })}
+            placeholder={I18n.get('Enter Password')}
+            secureTextEntry
+            autoCapitalize="none"
+          />
+          <View style={styles.helpersWrapper}>
+            <HelperText type="error" visible={true} style={styles.helper}>
+              {I18n.get(this.state.error)}
+            </HelperText>
+          </View>
+        </View>
+        <Button
+          mode="outlined"
+          style={
+            !!(!this.state.code || !this.state.password)
+              ? styles.buttonDisabledWeb
+              : styles.buttonWeb
+          }
+          disabled={!!(!this.state.code || !this.state.password)}
+          onPress={this.haldleSubmit}
+          color={'#FFFFFF'}
+        >
+          {I18n.get('Confirm')}
+        </Button>
+        <TouchableHighlight
+          mode="outlined"
+          onPress={() => this.changeState('signIn')}
+          underlayColor="none"
+          style={styles.alreadyAccountWeb}
+          color={'#FFFFFF'}
+        >
+          <Text style={styles.alreadyLogin}>{I18n.get('Sign In')}</Text>
+        </TouchableHighlight>
+      </View>
+    ) : (
       <TextInputAvoidingView>
         <StatusBar style="dark" />
         <ScrollView
@@ -199,80 +322,4 @@ export default class CustomForgotPassword extends ForgotPassword {
       </Wrapper>
     );
   }
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'column',
-    backgroundColor: '#FFFFFF',
-    marginTop: Constants.statusBarHeight,
-  },
-  helpersWrapper: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  wrapper: {
-    flex: 1,
-  },
-  helper: {
-    flexShrink: 1,
-  },
-  counterHelper: {
-    textAlign: 'right',
-  },
-  inputContainerStyle: {
-    marginLeft: 8,
-    marginRight: 8,
-    marginStart: 8,
-    marginEnd: 8,
-  },
-  fontSize: {
-    fontSize: 12,
-  },
-  button: {
-    marginVertical: 12,
-    marginHorizontal: 50,
-    color: '#FFFFFF',
-    backgroundColor: 'green',
-  },
-  buttonDisabled: {
-    marginVertical: 12,
-    marginHorizontal: 50,
-    color: '#FFFFFF',
-    backgroundColor: 'green',
-  },
-  avatar: {
-    marginTop: 8,
-    width: 100,
-    height: 100,
-  },
-  alreadyAccount: {
-    marginHorizontal: 16,
-    marginVertical: 16,
-    color: '#000000',
-  },
-  registerHead: {
-    fontSize: 35,
-    marginBottom: 8,
-  },
-  alreadyLogin: {
-    fontStyle: 'normal',
-    fontWeight: 'bold',
-    fontSize: 18,
-  },
-});
-
-function TextInputAvoidingView({ children }) {
-  return Platform.OS === 'ios' ? (
-    <KeyboardAvoidingView
-      style={styles.wrapper}
-      behavior="padding"
-      keyboardVerticalOffset={80}
-    >
-      {children}
-    </KeyboardAvoidingView>
-  ) : (
-    <>{children}</>
-  );
 }

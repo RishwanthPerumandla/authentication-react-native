@@ -4,13 +4,13 @@ import {
   StyleSheet,
   Image,
   View,
-  TouchableOpacity,
   TouchableHighlight,
   KeyboardAvoidingView,
   ScrollView,
   Platform,
 } from 'react-native';
-import Constants from 'expo-constants';
+import TextInputAvoidingView from './TextInputAvoidView';
+import { styles } from '../styles/globalStyles';
 import { StatusBar } from 'expo-status-bar';
 import { TextInput, HelperText, Button } from 'react-native-paper';
 import Amplify, { Auth, I18n, Logger } from 'aws-amplify';
@@ -50,29 +50,17 @@ class CustomSignIn extends SignIn {
           keyboardShouldPersistTaps={'always'}
           removeClippedSubviews={false}
         >
-          <View
-            style={{
-              flex: 1,
-              flexDirection: 'row',
-              justifyContent: 'center',
-            }}
-          >
+          <View style={styles.imageView}>
             <Image
               style={styles.avatar}
               source={require('../assets/exibits_logo.png')}
             />
           </View>
-          <View
-            style={{
-              flex: 1,
-              flexDirection: 'row',
-              justifyContent: 'center',
-            }}
-          >
+          <View style={styles.imageView}>
             <Text style={styles.registerHead}>Login</Text>
           </View>
 
-          <View style={styles.inputContainerStyle}>
+          <View style={styles.inputContainerStyleWeb}>
             <View style={styles.helpersWrapper}>
               <HelperText type="error" visible={true} style={styles.helper}>
                 {this.state.error}
@@ -94,7 +82,7 @@ class CustomSignIn extends SignIn {
               onChangeText={(text) => this.setState({ username: text })}
             />
           </View>
-          <View style={styles.inputContainerStyle}>
+          <View style={styles.inputContainerStyleWeb}>
             <TextInput
               mode="outlined"
               error={!true}
@@ -118,8 +106,8 @@ class CustomSignIn extends SignIn {
             mode="outlined"
             style={
               !!(!this.state.username || !this.state.password)
-                ? styles.buttonDisabled
-                : styles.button
+                ? styles.buttonDisabledWeb
+                : styles.buttonWeb
             }
             disabled={!!(!this.state.username || !this.state.password)}
             onPress={this.handleSignIn}
@@ -128,36 +116,6 @@ class CustomSignIn extends SignIn {
           >
             LOGIN
           </Button>
-          {/* <View style={theme.section}>
-          <View style={theme.sectionBody}>
-             <TextInput
-              style={styles.input}
-              autoCapitalize="none"
-              ref={this.usernameRef}
-              onChangeText={(text) => this.setState({ username: text })}
-              placeholder={I18n.get('USERNAME')}
-            /> 
-             <TextInput
-              style={styles.input}
-              autoCapitalize="none"
-              ref={this.passwordRef}
-              onChangeText={(text) => this.setState({ password: text })}
-              placeholder={I18n.get('PASSWORD')}
-              secureTextEntry
-            /> 
-             <TouchableOpacity
-              style={
-                !!(!this.state.username || !this.state.password)
-                  ? styles.buttonDisabled
-                  : styles.button
-              }
-              disabled={!!(!this.state.username || !this.state.password)}
-              onPress={this.handleSignIn}
-            >
-              <Text style={styles.buttonText}>SIGN IN </Text>
-            </TouchableOpacity> 
-           </View>
-        </View> */}
 
           <TouchableHighlight
             mode="outlined"
@@ -170,15 +128,7 @@ class CustomSignIn extends SignIn {
           </TouchableHighlight>
 
           <View style={{ flexDirection: 'row' }}>
-            <View
-              style={{
-                flex: 1,
-                borderBottomColor: 'black',
-                borderBottomWidth: 1,
-                marginVertical: 4,
-                marginHorizontal: '30%',
-              }}
-            />
+            <View style={styles.lineSeperator} />
           </View>
           <Button
             mode="outlined"
@@ -196,15 +146,7 @@ class CustomSignIn extends SignIn {
           </Button>
 
           <View style={{ flexDirection: 'row' }}>
-            <View
-              style={{
-                flex: 1,
-                borderBottomColor: 'black',
-                borderBottomWidth: 1,
-                marginVertical: 4,
-                marginHorizontal: '30%',
-              }}
-            />
+            <View style={styles.lineSeperator} />
           </View>
 
           <Button
@@ -223,22 +165,14 @@ class CustomSignIn extends SignIn {
           </Button>
 
           <View style={{ flexDirection: 'row' }}>
-            <View
-              style={{
-                flex: 1,
-                borderBottomColor: 'black',
-                borderBottomWidth: 1,
-                marginVertical: 4,
-                marginHorizontal: '30%',
-              }}
-            />
+            <View style={styles.lineSeperator} />
           </View>
 
           <TouchableHighlight
             mode="outlined"
             onPress={() => this.changeState('signUp')}
             underlayColor="none"
-            style={styles.alreadyAccount}
+            style={styles.alreadyAccountWeb}
             color={'#FFFFFF'}
           >
             <Text style={styles.alreadyLogin}>
@@ -334,36 +268,6 @@ class CustomSignIn extends SignIn {
             >
               LOGIN
             </Button>
-            {/* <View style={theme.section}>
-        <View style={theme.sectionBody}>
-           <TextInput
-            style={styles.input}
-            autoCapitalize="none"
-            ref={this.usernameRef}
-            onChangeText={(text) => this.setState({ username: text })}
-            placeholder={I18n.get('USERNAME')}
-          /> 
-           <TextInput
-            style={styles.input}
-            autoCapitalize="none"
-            ref={this.passwordRef}
-            onChangeText={(text) => this.setState({ password: text })}
-            placeholder={I18n.get('PASSWORD')}
-            secureTextEntry
-          /> 
-           <TouchableOpacity
-            style={
-              !!(!this.state.username || !this.state.password)
-                ? styles.buttonDisabled
-                : styles.button
-            }
-            disabled={!!(!this.state.username || !this.state.password)}
-            onPress={this.handleSignIn}
-          >
-            <Text style={styles.buttonText}>SIGN IN </Text>
-          </TouchableOpacity> 
-         </View>
-      </View> */}
 
             <TouchableHighlight
               mode="outlined"
@@ -376,15 +280,7 @@ class CustomSignIn extends SignIn {
             </TouchableHighlight>
 
             <View style={{ flexDirection: 'row' }}>
-              <View
-                style={{
-                  flex: 1,
-                  borderBottomColor: 'black',
-                  borderBottomWidth: 1,
-                  marginVertical: 4,
-                  marginHorizontal: '30%',
-                }}
-              />
+              <View style={styles.lineSeperator} />
             </View>
             <Button
               mode="outlined"
@@ -402,15 +298,7 @@ class CustomSignIn extends SignIn {
             </Button>
 
             <View style={{ flexDirection: 'row' }}>
-              <View
-                style={{
-                  flex: 1,
-                  borderBottomColor: 'black',
-                  borderBottomWidth: 1,
-                  marginVertical: 4,
-                  marginHorizontal: '30%',
-                }}
-              />
+              <View style={styles.lineSeperator} />
             </View>
 
             <Button
@@ -429,15 +317,7 @@ class CustomSignIn extends SignIn {
             </Button>
 
             <View style={{ flexDirection: 'row' }}>
-              <View
-                style={{
-                  flex: 1,
-                  borderBottomColor: 'black',
-                  borderBottomWidth: 1,
-                  marginVertical: 4,
-                  marginHorizontal: '30%',
-                }}
-              />
+              <View style={styles.lineSeperator} />
             </View>
 
             <TouchableHighlight
@@ -459,96 +339,3 @@ class CustomSignIn extends SignIn {
 }
 
 export default withOAuth(CustomSignIn);
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'column',
-    backgroundColor: '#FFFFFF',
-    marginTop: Constants.statusBarHeight,
-  },
-  helpersWrapper: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  wrapper: {
-    flex: 1,
-  },
-  helper: {
-    flexShrink: 1,
-  },
-  counterHelper: {
-    textAlign: 'right',
-  },
-  inputContainerStyle: {
-    marginLeft: 8,
-    marginRight: 8,
-    marginStart: 8,
-    marginEnd: 8,
-  },
-  fontSize: {
-    fontSize: 12,
-  },
-  button: {
-    marginHorizontal: 12,
-    marginBottom: 12,
-    color: '#FFFFFF',
-    backgroundColor: '#000000',
-  },
-  buttonDisabled: {
-    marginHorizontal: 12,
-    marginBottom: 12,
-    color: '#fff',
-    backgroundColor: '#ff990080',
-  },
-  avatar: {
-    marginTop: 8,
-    width: 100,
-    height: 100,
-  },
-  buttonF: {
-    marginHorizontal: 12,
-    marginVertical: 18,
-    color: '#FFFFFF',
-    backgroundColor: '#3b5998',
-  },
-  buttonG: {
-    marginHorizontal: 12,
-    marginVertical: 18,
-    color: '#FFFFFF',
-    backgroundColor: '#CC3C3C',
-  },
-  alreadyAccount: {
-    marginHorizontal: 16,
-    marginVertical: 16,
-    color: '#000000',
-  },
-  registerHead: {
-    fontSize: 35,
-    marginBottom: 8,
-  },
-  alreadyLogin: {
-    fontStyle: 'normal',
-    fontWeight: 'bold',
-    fontSize: 18,
-  },
-  forgotPassword: {
-    marginHorizontal: 16,
-    marginBottom: 8,
-    color: '#000000',
-  },
-});
-
-function TextInputAvoidingView({ children }) {
-  return Platform.OS === 'ios' ? (
-    <KeyboardAvoidingView
-      style={styles.wrapper}
-      behavior="padding"
-      keyboardVerticalOffset={80}
-    >
-      {children}
-    </KeyboardAvoidingView>
-  ) : (
-    <>{children}</>
-  );
-}

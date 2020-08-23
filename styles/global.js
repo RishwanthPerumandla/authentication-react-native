@@ -27,21 +27,21 @@ export const globalStyles = StyleSheet.create({
 //   }
 // }
 
-const MySectionHeaderText = Object.assign({}, AmplifyTheme.sectionHeaderText, {
-  color: 'blue',
-});
-// const MGreetings = Object.assign({},AmplifyTheme.)
+// const MySectionHeaderText = Object.assign({}, AmplifyTheme.sectionHeaderText, {
+//   color: 'blue',
+// });
+// // const MGreetings = Object.assign({},AmplifyTheme.)
 
-const MyButton = Object.assign({}, AmplifyTheme.button, {
-  backgroundColor: 'blue',
-});
+// const MyButton = Object.assign({}, AmplifyTheme.button, {
+//   backgroundColor: 'blue',
+// });
 
-const MySectionFooterLink = Object.assign({}, AmplifyTheme.sectionFooterLink, {
-  color: 'blue',
-});
+// const MySectionFooterLink = Object.assign({}, AmplifyTheme.sectionFooterLink, {
+//   color: 'blue',
+// });
 
-export const MyTheme = Object.assign({}, AmplifyTheme, {
-  sectionHeaderText: MySectionHeaderText,
-  button: MyButton,
-  sectionFooterLink: MySectionFooterLink,
-});
+// export const MyTheme = Object.assign({}, AmplifyTheme, {
+//   sectionHeaderText: MySectionHeaderText,
+//   button: MyButton,
+//   sectionFooterLink: MySectionFooterLink,
+// });
