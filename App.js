@@ -8,11 +8,14 @@ import {
   View,
   Button,
   ImageBackground,
+  WebView,
   Dimensions,
 } from 'react-native';
 import { globalStyles, MyTheme } from './styles/global';
 import * as Permissions from 'expo-permissions';
 import * as ImagePicker from 'expo-image-picker';
+// import { ImagePicker } from 'react-native-image-picker';
+
 import Amplify, { Analytics, Auth, Storage } from 'aws-amplify';
 import * as WebBrowser from 'expo-web-browser';
 import config from './aws-exports';
@@ -99,7 +102,7 @@ function App(props) {
     });
 
     console.log(result);
-    setImage(null);
+
     if (!result.cancelled) {
       setImage(result.uri);
       uploadImage(image);
